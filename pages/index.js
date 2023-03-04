@@ -1,11 +1,63 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import { Inter } from "next/font/google";
+import styles from "@/styles/Home.module.css";
+import Lenis from "@studio-freight/lenis";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { useEffect } from "react";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  useEffect(() => {
+    const paths = [...document.querySelectorAll("path.path-anim")];
+
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
+      direction: "vertical", // vertical, horizontal
+      gestureDirection: "vertical", // vertical, horizontal, both
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    //get scroll value
+    lenis.on("scroll", ({ scroll, limit, velocity, direction, progress }) => {
+      console.log({ scroll, limit, velocity, direction, progress });
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    paths.forEach((el) => {
+      const svgEl = el.closest("svg");
+      const pathTo = el.dataset.pathTo;
+
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: svgEl,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        })
+        .to(el, {
+          ease: "none",
+          attr: { d: pathTo },
+        });
+    });
+  }, []);
   return (
     <>
       <Head>
@@ -14,110 +66,113 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.js</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
+      <body class="loading">
+        <main>
+          <div class="frame">
+            <a href="#test"></a>
+            <div class="frame__title">
+              <h1 class="frame__title-main">On Scroll Path Animations</h1>
+              <a
+                aria-label="Back to the article"
+                class="frame__title-back"
+                href="https://tympanus.net/codrops/?p=63809"
+              >
+                <span class="oh__inner">Back to the article</span>
+                <svg width="1em" height="1em" viewBox="0 0 24 24">
+                  <path d="M18.25 15.5a.75.75 0 00.75-.75v-9a.75.75 0 00-.75-.75h-9a.75.75 0 000 1.5h7.19L6.22 16.72a.75.75 0 101.06 1.06L17.5 7.56v7.19c0 .414.336.75.75.75z"></path>
+                </svg>
+              </a>
+              <br />
+              <a
+                class="frame__title-prev"
+                href="https://tympanus.net/Development/ScrollAnimationsGrid/"
+              >
+                Previous demo
+              </a>
+            </div>
           </div>
-        </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+          <section class="content content--centered">
+            <div class="content__title">
+              <span class="content__title-pre content__title-pre--offset">
+                Crafting
+              </span>
+              <h2 class="content__title-main">Transcendence</h2>
+            </div>
+            <div class="content__scroll">Scroll, if you wish</div>
+          </section>
+          <section class="content">
+            <div class="content__bg content__bg--bottom background__one">
+              <svg
+                class="separator separator--up"
+                width="100%"
+                height="100%"
+                viewBox="0 0 100 10"
+                preserveAspectRatio="none"
+              >
+                <path
+                  class="separator__path path-anim"
+                  data-path-to="M 0 0 C 35 21 70 0 100 0 L 0 0 Z"
+                  vector-effect="non-scaling-stroke"
+                  d="M 0 0 C 37 0 70 0 100 0 L 0 0 Z"
+                />
+              </svg>
+              <svg
+                class="separator separator--down"
+                width="100%"
+                height="100%"
+                viewBox="0 0 100 10"
+                preserveAspectRatio="none"
+              >
+                <path
+                  class="separator__path path-anim"
+                  data-path-to="M 0 0 C 29 6 78 17 100 0 L 100 10 H 0 Z"
+                  vector-effect="non-scaling-stroke"
+                  d="M 0 0 C 18 1 61 9 100 0 L 100 10 H 0 Z"
+                />
+              </svg>
+            </div>
+            <div id="test" class="content__sides">
+              <div class="content__text">
+                <h2>Mastering the Now</h2>
+                <p>
+                  Sit down, and I shall tell thee. The thirst for love, without
+                  love of learning, sinks into simpleness. Love of knowledge,
+                  without love of learning, sinks into vanity. Love of truth,
+                  without love of learning, sinks into cruelty. Love of
+                  straightness, without love of learning, sinks into rudeness.
+                  Love of daring, without love of learning, sinks into
+                  turbulence. Love of strength, without love of learning, sinks
+                  into oddity.
+                </p>
+              </div>
+              <svg
+                class="image-clip"
+                width="500px"
+                height="750px"
+                viewBox="0 0 500 750"
+              >
+                <defs>
+                  {/* <clipPath id="shape1"> */}
+                  <path
+                    class="path-anim"
+                    data-path-to="M 0 0 L 500 0 C 331 608 485 551 500 750 L 0 750 C 120 281 7 296 0 0 Z"
+                    d="M 0 0 L 500 0 C 500 599.6 500 677.1 500 750 L 0 750 C 0 205 0 105 0 0 Z"
+                  />
+                  {/* </clipPath> */}
+                </defs>
+                <image
+                  clip-path="url(#shape1)"
+                  xlinkHref="img/2.jpg"
+                  x="0"
+                  y="0"
+                  width="500"
+                  height="750"
+                />
+              </svg>
+            </div>
+          </section>
+        </main>
+      </body>
     </>
-  )
+  );
 }
