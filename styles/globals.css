@@ -83,6 +83,7 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  background-color: white;
 }
 
 body {
@@ -100,6 +101,11 @@ a {
   text-decoration: none;
 }
 
+main {
+	background-color: white;
+	color: black;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -108,6 +114,10 @@ a {
 
 .background__one {
   background-image:url("../public/img/1.jpg");
+}
+
+.background__three {
+  background-image:url("../public/img/3.jpg");
 }
 
 .unbutton {
@@ -187,6 +197,7 @@ a {
 
 .content {
 	position: relative;
+	background-color: white;
 }
 
 .content--centered {
@@ -271,6 +282,10 @@ a {
 	background-position: 50% 100%;
 }
 
+.separator__path {
+	fill: white;
+}
+
 .separator {
 	display: block;
 	position: absolute;
@@ -335,7 +350,7 @@ a {
 	flex-direction: column;
 	justify-content: center;
 	text-align: right;
-	align-items: end;
+	align-items: flex-end;
 }
 
 .content__text--left {
@@ -364,6 +379,8 @@ a {
 	align-content: center;
 	justify-content: center;
 	align-items: center;
+	background: white;
+	color: black;
 }
 
 .content__sides--nogap {
@@ -394,9 +411,9 @@ a {
 }
 
 .footer {
-	background: #000;
+	background: white;
 	position: relative;
-	color: #fff;
+	color: black;
 	--color-link: #988c6c;
 	--color-link-hover: #fff;
 }
